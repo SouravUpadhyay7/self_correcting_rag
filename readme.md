@@ -80,6 +80,11 @@ User Question
 ```
 self_correcting_rag/
 │
+├── .env                       # 🔐 API keys (never commit this)
+├── .gitignore                 # 🚫 Ignores .env, .venv, chroma_db
+├── requirements.txt           # 📦 All dependencies
+├── README.md
+│
 ├── app/
 │   ├── config.py              # 🔌 LLM + Embeddings setup (OpenRouter + HuggingFace)
 │   ├── state.py               # 🧾 LangGraph shared state (question, docs, answer, scores)
@@ -112,12 +117,9 @@ self_correcting_rag/
 │   └── ui/
 │       └── streamlit_app.py   # 🖥️  Streamlit frontend
 │
-├── data/
-│   ├── chroma_db/             # 🗄️  Persistent vector database
-│   └── temp.pdf               # 📄 Temporary uploaded file
-│
-├── requirements.txt
-└── README.md
+└── data/
+    ├── chroma_db/             # 🗄️  Persistent vector database (auto-generated)
+    └── temp.pdf               # 📄 Temporary uploaded file (auto-generated)
 ```
 
 ---
@@ -163,10 +165,10 @@ The core file. Defines the cyclic graph:
 
 ### 1. Clone & Setup
 ```bash
-git clone <your-repo>
-cd self_correcting_rag
+git clone https://github.com/your-username/self-correcting-rag-langgraph
+cd self-correcting-rag-langgraph
 python -m venv .venv
-.venv/Scripts/activate       # Windows
+.venv\Scripts\activate       # Windows
 source .venv/bin/activate    # Mac/Linux
 ```
 
@@ -176,16 +178,18 @@ pip install -r requirements.txt
 ```
 
 ### 3. Configure API Keys
-Create a `.env` file:
+Create a `.env` file in the project root:
 ```
-OPENAI_API_KEY=your_openrouter_key
-HF_TOKEN=your_huggingface_token   # optional
+OPENROUTER_API_KEY=your_openrouter_key_here
 ```
+Get your free API key at [openrouter.ai](https://openrouter.ai)
 
 ### 4. Run the App
 ```bash
 streamlit run app/ui/streamlit_app.py --server.fileWatcherType none
 ```
+
+Then open `http://localhost:8501` in your browser.
 
 ---
 
@@ -245,13 +249,8 @@ Use these questions to stress-test the agent:
 | `chromadb.errors.NotFoundError` | Delete `data/chroma_db/*` and re-upload PDF |
 | `RuntimeError: no running event loop` | Add `--server.fileWatcherType none` to run command |
 | `ImportError: chromadb` | `pip install chromadb` inside venv |
-| Duplicate chunks retrieved | Clear chroma_db before re-indexing |
-
----
-
-## 🎓 One-Line Explanation (for your professor)
-
-> *"This project implements a self-correcting RAG agent using LangGraph where the model retrieves knowledge from uploaded PDFs, generates answers, evaluates its own outputs across relevance, grounding and completeness dimensions, and iteratively improves responses with confidence scoring and conversation memory support."*
+| `ImportError: sentence_transformers` | `pip install sentence-transformers` inside venv |
+| Duplicate chunks retrieved | Clear `data/chroma_db/` before re-indexing |
 
 ---
 
@@ -268,6 +267,20 @@ Use these questions to stress-test the agent:
 | Confidence scoring | ❌ | ✅ |
 | Conversation memory | ❌ | ✅ |
 | LangGraph agent architecture | ❌ | ✅ |
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| LLM | OpenRouter (GPT-4o-mini) |
+| Embeddings | HuggingFace `all-MiniLM-L6-v2` |
+| Vector Store | ChromaDB |
+| Agent Framework | LangGraph |
+| RAG Framework | LangChain |
+| Frontend | Streamlit |
+| PDF Parsing | PyPDF |
 
 ---
 
