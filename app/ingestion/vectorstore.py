@@ -25,4 +25,4 @@ def add_documents(texts):
 
 def get_retriever():
     vs = get_vectorstore()
-    return vs.as_retriever(search_kwargs={"k": 3})
+    return vs.as_retriever(search_kwargs={"k": 5})
