@@ -1,4 +1,6 @@
 import sys
+import shutil
+import os
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -40,6 +42,14 @@ if uploaded_file:
         st.success(f"✅ **{uploaded_file.name}** indexed successfully!")
     else:
         st.info(f"📌 **{uploaded_file.name}** is already indexed. Ask away!")
+
+    # Clear index button
+    if st.button("🗑️ Clear Index & Re-upload", type="secondary"):
+        if os.path.exists("data/chroma_db"):
+            shutil.rmtree("data/chroma_db")
+        st.session_state.indexed_file = None
+        st.success("✅ Index cleared! Upload a new PDF.")
+        st.rerun()
 
 st.divider()
 
