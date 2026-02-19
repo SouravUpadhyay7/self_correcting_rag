@@ -1,26 +1,24 @@
 import os
+from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-# ✅ Set your OpenRouter API key here
-OPENROUTER_API_KEY = ""
+# Load .env file
+load_dotenv()
 
-# Optional but recommended headers for OpenRouter
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
 os.environ["OPENAI_API_KEY"] = OPENROUTER_API_KEY
 os.environ["OPENAI_BASE_URL"] = "https://openrouter.ai/api/v1"
 
-
-# 🔹 LLM Configuration (OpenRouter)
 def get_llm():
     return ChatOpenAI(
-        model="openai/gpt-4o-mini",   # you can change model here
+        model="openai/gpt-4o-mini",
         temperature=0,
         base_url="https://openrouter.ai/api/v1",
         api_key=OPENROUTER_API_KEY
     )
 
-
-# 🔹 Local Embeddings (NO API CALLS)
 def get_embeddings():
     return HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
